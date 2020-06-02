@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -35,12 +35,12 @@ const useStyles = makeStyles((theme)=> ({
   }));
 
 function CList(props) {
- 
     const classes = useStyles();
     let countries = props.countries
     const [countriess, SetCountries] = useState([]) 
     const [searchTerm, setSearchTerm] = React.useState("");
- 
+    const [order, setOrder] = useState('false')
+    
     const handleChange = event => {
       setSearchTerm(event.target.value);
     };
@@ -48,13 +48,26 @@ function CList(props) {
         const results = countries.filter(country =>
         country.Country.toLowerCase().includes(searchTerm)
       ); 
-      SetCountries(results);
+      SetCountries(results);   
     }, [countries,searchTerm]);
 
+    const NewConfirmedSort = (type) =>{
+      setOrder(order === 'false' ? 'true' : 'false');
+      
+      if (order=='true'){
+        const sort = [...countries].sort((a,b) => b[type] -a[type])
+        console.log(sort)
+        SetCountries(sort);
+      }
+      else if (order == 'false' ){
+        const sort = [...countries].sort((a,b) => a[type] - b[type])
+        console.log(sort)
+        SetCountries(sort);
+
+      }
+    }
     return (
         <div>
-
-
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
@@ -62,19 +75,19 @@ function CList(props) {
             <TableCell >Country 
               <InputBase value={searchTerm}
                 onChange={handleChange}
-
                 className={classes.input}
                 placeholder="Search Country"
                 inputProps={{ 'aria-label': 'search google maps' }}
               />
             </TableCell>
-            <TableCell align="right">NewConfirmed</TableCell>
+        <TableCell align="right">NewConfirmed
+                <button onClick={() => NewConfirmedSort('NewConfirmed')}>{order == "true" ?  <>&#8593;</>  : <>&#8595;</>	}</button>
+          </TableCell>
             <TableCell align="right">TotalConfirmed</TableCell>
             <TableCell align="right">NewDeaths</TableCell>
             <TableCell align="right">TotalDeaths</TableCell>
             <TableCell align="right">NewRecovered</TableCell>
             <TableCell align="right">TotalRecovered</TableCell>
-
           </TableRow>
         </TableHead>
         <TableBody>
@@ -89,13 +102,11 @@ function CList(props) {
               <TableCell align="right">{country.TotalDeaths}</TableCell>
               <TableCell align="right">{country.NewRecovered}</TableCell>
               <TableCell align="right">{country.TotalRecovered}</TableCell>
-
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-            
         </div>
     );
 }
