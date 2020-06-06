@@ -4,7 +4,9 @@ import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 import CountUp from 'react-countup';
 import cx from 'classnames';
 
-function Cards(props) {
+
+function Cards(props) { 
+  
     if (!props){
         return "Loading..."
     }
@@ -15,7 +17,10 @@ function Cards(props) {
       }
     return (
         <div>
+
     <div className={styles.container}>
+    <h1> <p > COVID 19 </p> </h1>
+
         <Grid container spacing={3} justify="center">   
         <Grid item xs={12} md={3} component={Card} className={cx(styles.card, styles.infected)}>
           <CardContent>
